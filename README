@@ -1,0 +1,5 @@
+RELEASING
+=======
+ 
+ * mvn release:prepare --batch-mode -Drelease -DreleaseVersion=1.0.0.Final -Dtag=1.0.0.Final -DdevelopmentVersion=1.0.next-SNAPSHOT
+ * mvn release:perform
