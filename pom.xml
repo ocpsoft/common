@@ -124,13 +124,13 @@
    </distributionManagement>
 
    <scm>
-      <connection>scm:git:git://github.com/ocpsoft/rewrite.git</connection>
-      <developerConnection>scm:git:git@github.com:ocpsoft/rewrite.git</developerConnection>
-      <url>http://github.com/ocpsoft/rewrite</url>
+      <connection>scm:git:git://github.com/ocpsoft/common.git</connection>
+      <developerConnection>scm:git:git@github.com:ocpsoft/common.git</developerConnection>
+      <url>http://github.com/ocpsoft/common</url>
    </scm>
 
    <issueManagement>
       <system>GitHub</system>
-      <url>https://github.com/ocpsoft/rewrite/issues</url>
+      <url>https://github.com/ocpsoft/common/issues</url>
    </issueManagement>
 </project>
