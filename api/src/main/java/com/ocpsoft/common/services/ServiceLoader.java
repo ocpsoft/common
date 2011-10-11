@@ -239,12 +239,12 @@ public class ServiceLoader<S> implements Iterable<S>
       {
          return;
       }
-      S serviceInstance = loadEnriched(serviceClass);
-      if (serviceInstance == null)
+      Collection<? extends S> services = loadEnriched(serviceClass);
+      if ((services == null) || services.isEmpty())
       {
          return;
       }
-      providers.add(serviceInstance);
+      providers.addAll(services);
    }
 
    private Class<? extends S> loadClass(final String serviceClassName)
@@ -276,11 +276,11 @@ public class ServiceLoader<S> implements Iterable<S>
     * 
     * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
     */
-   public static <T> T loadEnriched(final Class<T> serviceClass)
+   public static <T> Collection<T> loadEnriched(final Class<T> serviceClass)
    {
       try
       {
-         T service = null;
+         Collection<T> services = new ArrayList<T>();
          ServiceEnricher origin = null;
 
          if (!NonEnriching.class.isAssignableFrom(serviceClass))
@@ -293,8 +293,8 @@ public class ServiceLoader<S> implements Iterable<S>
 
             for (ServiceEnricher enricher : enricherLoader)
             {
-               service = enricher.produce(serviceClass);
-               if (service != null)
+               services = enricher.produce(serviceClass);
+               if (services != null)
                {
                   origin = enricher;
                   break;
@@ -302,11 +302,11 @@ public class ServiceLoader<S> implements Iterable<S>
             }
          }
 
-         if (service == null)
+         if (services.isEmpty())
          {
             Constructor<? extends T> constructor = serviceClass.getDeclaredConstructor();
             constructor.setAccessible(true);
-            service = constructor.newInstance();
+            services.add(constructor.newInstance());
          }
 
          if (!NonEnriching.class.isAssignableFrom(serviceClass))
@@ -315,12 +315,14 @@ public class ServiceLoader<S> implements Iterable<S>
             {
                if (!enricher.equals(origin))
                {
-                  service = enricher.enrich(service);
+                  for (T service : services) {
+                     enricher.enrich(service);
+                  }
                }
             }
          }
 
-         return service;
+         return services;
       }
       catch (NoClassDefFoundError e)
       {

@@ -17,9 +17,24 @@ package com.ocpsoft.common.services;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- *
+ * 
  */
 public class DummyServiceImpl2 implements DummyService
 {
+   private final String name;
 
+   public DummyServiceImpl2()
+   {
+      this.name = "default";
+   }
+
+   public DummyServiceImpl2(final String name)
+   {
+      this.name = name;
+   }
+
+   public String getName()
+   {
+      return name;
+   }
 }

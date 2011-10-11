@@ -15,6 +15,8 @@
  */
 package com.ocpsoft.common.spi;
 
+import java.util.Collection;
+
 import com.ocpsoft.common.services.ServiceLoader;
 
 /**
@@ -25,13 +27,17 @@ import com.ocpsoft.common.services.ServiceLoader;
 public interface ServiceEnricher
 {
    /**
-    * Produce an enriched service of the given type. If no enriching took place, this method must return null.
+    * Produce a {@link Collection} of enriched services of the given type. If no instances were produced, this method
+    * must return an empty {@link Collection}. Only one {@link ServiceEnricher} may produce a service at any given time.
+    * If more than one {@link ServiceEnricher} may produce the same service, only the first will be used.
     */
-   <T> T produce(Class<T> type);
+   <T> Collection<T> produce(Class<T> type);
 
    /**
     * Enrich an instantiated instance of the given service type. If no enriching took place, this method must return the
-    * original service without modification.
+    * original service without modification. This method is called only when the service was <strong>not</strong>
+    * produced by this {@link ServiceEnricher}; in that case, enrichment should have already taken place at the time of
+    * production.
     */
-   <T> T enrich(T service);
+   <T> void enrich(T service);
 }

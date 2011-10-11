@@ -24,26 +24,35 @@ package com.ocpsoft.common.services;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import com.ocpsoft.common.spi.ServiceLocator;
+import com.ocpsoft.common.spi.ServiceEnricher;
 
 /**
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  */
-public class MockServiceLocator implements ServiceLocator
+public class MockServiceEnricher implements ServiceEnricher
 {
-   public static boolean provide = false;
+   public static boolean enrich = false;
 
    @Override
-   @SuppressWarnings({ "rawtypes", "unchecked" })
-   public <T> Collection<Class<T>> locate(final Class<T> type)
+   @SuppressWarnings("unchecked")
+   public <T> Collection<T> produce(final Class<T> type)
    {
-      Collection result = new ArrayList();
-      if (provide)
+      Collection<T> result = new ArrayList<T>();
+      /*
+       * If we are asked for an instance of #2, provide two instances of #2 with different names.
+       */
+      if (enrich && DummyServiceImpl2.class.equals(type))
       {
-         result.add(DummyServiceImpl2.class);
+         result.add((T) new DummyServiceImpl2("first"));
+         result.add((T) new DummyServiceImpl2("second"));
       }
       return result;
+
    }
+
+   @Override
+   public <T> void enrich(final T service)
+   {}
 
 }
