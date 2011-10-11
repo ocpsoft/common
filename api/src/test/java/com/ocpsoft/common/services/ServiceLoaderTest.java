@@ -21,7 +21,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.ocpsoft.common.services.ServiceLoader;
 import com.ocpsoft.common.util.Iterators;
 
 /**
@@ -36,6 +35,17 @@ public class ServiceLoaderTest
    {
       ServiceLoader<DummyService> services = ServiceLoader.load(DummyService.class);
       List<DummyService> list = Iterators.asList(services);
-      Assert.assertFalse(list.isEmpty());
+      Assert.assertEquals(1, list.size());
+   }
+
+   @Test
+   @SuppressWarnings("unchecked")
+   public void testWithProviderExtension()
+   {
+      MockServiceLocator.provide = true;
+      ServiceLoader<DummyService> services = ServiceLoader.load(DummyService.class);
+      List<DummyService> list = Iterators.asList(services);
+      Assert.assertEquals(2, list.size());
+      MockServiceLocator.provide = false;
    }
 }

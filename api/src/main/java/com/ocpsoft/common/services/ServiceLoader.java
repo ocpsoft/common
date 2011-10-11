@@ -23,6 +23,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ocpsoft.common.spi.ServiceEnricher;
+import com.ocpsoft.common.spi.ServiceLocator;
 
 /**
  * This class handles looking up service providers on the class path. It implements the <a
@@ -109,33 +111,13 @@ public class ServiceLoader<S> implements Iterable<S>
       return new ServiceLoader<S>(service, loader);
    }
 
-   /**
-    * Creates a new service loader for the given service type, using the extension class loader.
-    * 
-    * This convenience method simply locates the extension class loader, call it extClassLoader, and then returns
-    * 
-    * <code>ServiceLoader.load(service, extClassLoader)</code>
-    * 
-    * If the extension class loader cannot be found then the system class loader is used; if there is no system class
-    * loader then the bootstrap class loader is used.
-    * 
-    * This method is intended for use when only installed providers are desired. The resulting service will only find
-    * and load providers that have been installed into the current Java virtual machine; providers on the application's
-    * class path will be ignored.
-    * 
-    * @param service The interface or abstract class representing the service
-    * @return A new service loader
-    */
-   public static <S> ServiceLoader<S> loadInstalled(final Class<S> service)
-   {
-      throw new UnsupportedOperationException("Not implemented");
-   }
-
    private final String serviceFile;
    private final Class<S> expectedType;
    private final ClassLoader loader;
 
    private Set<S> providers;
+
+   private java.util.ServiceLoader<ServiceLocator> locatorLoader;
 
    private ServiceLoader(final Class<S> service, final ClassLoader loader)
    {
@@ -161,6 +143,22 @@ public class ServiceLoader<S> implements Iterable<S>
       {
          loadServiceFile(serviceFile);
       }
+
+      if (locatorLoader == null)
+         locatorLoader = java.util.ServiceLoader
+                  .load(ServiceLocator.class);
+
+      for (ServiceLocator locator : locatorLoader)
+      {
+         Collection<Class<S>> serviceTypes = locator.locate(expectedType);
+         if ((serviceTypes != null) && !serviceTypes.isEmpty())
+         {
+            for (Class<S> type : serviceTypes) {
+               loadClass(type); // TODO lb3 test this now
+            }
+         }
+      }
+
    }
 
    private List<URL> loadServiceFiles()
@@ -232,6 +230,11 @@ public class ServiceLoader<S> implements Iterable<S>
    private void loadService(final String serviceClassName)
    {
       Class<? extends S> serviceClass = loadClass(serviceClassName);
+      loadClass(serviceClass);
+   }
+
+   private void loadClass(final Class<? extends S> serviceClass)
+   {
       if (serviceClass == null)
       {
          return;
