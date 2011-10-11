@@ -14,7 +14,7 @@
    <parent>
       <groupId>com.ocpsoft.common</groupId>
       <artifactId>common-parent</artifactId>
-      <version>1.0.1.Final</version>
+      <version>1.0.2-SNAPSHOT</version>
       <relativePath>../</relativePath>
    </parent>
    
