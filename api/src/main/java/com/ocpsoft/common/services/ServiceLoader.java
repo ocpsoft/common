@@ -294,7 +294,11 @@ public class ServiceLoader<S> implements Iterable<S>
             for (ServiceEnricher enricher : enricherLoader)
             {
                services = enricher.produce(serviceClass);
-               if (services != null)
+               if (services == null)
+               {
+                  services = new ArrayList<T>();
+               }
+               if (!services.isEmpty())
                {
                   origin = enricher;
                   break;

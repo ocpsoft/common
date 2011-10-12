@@ -32,7 +32,10 @@ import com.ocpsoft.common.spi.ServiceEnricher;
  */
 public class MockServiceEnricher implements ServiceEnricher
 {
-   public static boolean enrich = false;
+   public static boolean produceLocated = false;
+   public static boolean enriched;
+   public static boolean produced;
+   public static boolean produceStandard;
 
    @Override
    @SuppressWarnings("unchecked")
@@ -42,10 +45,16 @@ public class MockServiceEnricher implements ServiceEnricher
       /*
        * If we are asked for an instance of #2, provide two instances of #2 with different names.
        */
-      if (enrich && DummyServiceImpl2.class.equals(type))
+      if (produceLocated && DummyServiceImpl2.class.equals(type))
       {
          result.add((T) new DummyServiceImpl2("first"));
          result.add((T) new DummyServiceImpl2("second"));
+         produced = true;
+      }
+      if (produceStandard && DummyServiceImpl.class.equals(type))
+      {
+         result.add((T) new DummyServiceImpl());
+         produced = true;
       }
       return result;
 
@@ -53,6 +62,8 @@ public class MockServiceEnricher implements ServiceEnricher
 
    @Override
    public <T> void enrich(final T service)
-   {}
+   {
+      enriched = true;
+   }
 
 }

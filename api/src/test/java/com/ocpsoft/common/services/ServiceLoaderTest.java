@@ -53,23 +53,41 @@ public class ServiceLoaderTest
    @SuppressWarnings("unchecked")
    public void testWithEnricherProviderDoesNotProduceUnlessTypeMatches() throws Exception
    {
-      MockServiceEnricher.enrich = true;
+      MockServiceEnricher.produceLocated = true;
       ServiceLoader<DummyService> services = ServiceLoader.load(DummyService.class);
       List<DummyService> list = Iterators.asList(services);
       Assert.assertEquals(1, list.size());
-      MockServiceEnricher.enrich = false;
+      MockServiceEnricher.produceLocated = false;
    }
 
    @Test
    @SuppressWarnings("unchecked")
    public void testWithEnricherAndLocatorProducesTwoSeparateNamedServiceInstances() throws Exception
    {
-      MockServiceEnricher.enrich = true;
+      MockServiceEnricher.produceLocated = true;
       MockServiceLocator.provide = true;
       ServiceLoader<DummyService> services = ServiceLoader.load(DummyService.class);
       List<DummyService> list = Iterators.asList(services);
       Assert.assertEquals(3, list.size());
-      MockServiceEnricher.enrich = false;
+      MockServiceEnricher.produceLocated = false;
+      MockServiceLocator.provide = false;
+   }
+
+   @Test
+   @SuppressWarnings("unchecked")
+   public void testEnricherThatProvidesClassDoesNotEnrich() throws Exception
+   {
+      MockServiceEnricher.produceStandard = true;
+      MockServiceEnricher.produced = false;
+      MockServiceEnricher.enriched = false;
+      Assert.assertFalse(MockServiceEnricher.produced);
+      Assert.assertFalse(MockServiceEnricher.enriched);
+      ServiceLoader<DummyService> services = ServiceLoader.load(DummyService.class);
+      List<DummyService> list = Iterators.asList(services);
+      Assert.assertEquals(1, list.size());
+      Assert.assertTrue(MockServiceEnricher.produced);
+      Assert.assertFalse(MockServiceEnricher.enriched);
+      MockServiceEnricher.produceStandard = false;
       MockServiceLocator.provide = false;
    }
 }
