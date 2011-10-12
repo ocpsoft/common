@@ -12,7 +12,7 @@
    <modelVersion>4.0.0</modelVersion>
    <groupId>com.ocpsoft.common</groupId>
    <artifactId>common-parent</artifactId>
-   <version>1.0.2.Final</version>
+   <version>1.0.3-SNAPSHOT</version>
    <packaging>pom</packaging>
 
    <parent>
