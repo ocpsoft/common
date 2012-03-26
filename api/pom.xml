@@ -12,12 +12,15 @@
    <modelVersion>4.0.0</modelVersion>
    
    <parent>
-      <groupId>com.ocpsoft.common</groupId>
+      <groupId>org.ocpsoft.common</groupId>
       <artifactId>common-parent</artifactId>
       <version>1.0.3-SNAPSHOT</version>
       <relativePath>../</relativePath>
    </parent>
    
    <artifactId>common-api</artifactId>
+   
+   <name>OCPsoft Common API</name>
+   <description>Common API and Utilities</description>
 
 </project>
