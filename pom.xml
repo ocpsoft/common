@@ -14,10 +14,10 @@
    <parent>
       <groupId>org.ocpsoft</groupId>
       <artifactId>ocpsoft-parent</artifactId>
-      <version>3</version>
+      <version>4</version>
    </parent>
    
-   <name>OCPsoft Common Parent</name>
+   <name>OCPsoft Common - Parent</name>
    <description>Parent POM for Common API and Utilities</description>
    
    <groupId>org.ocpsoft.common</groupId>
@@ -56,10 +56,6 @@
          <artifactId>junit</artifactId>
       </dependency>
    </dependencies>
-
-   <build>
-      <finalName>common-parent</finalName>
-   </build>
 
    <developers>
       <developer>
