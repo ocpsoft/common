@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * Copyright 2012 <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,30 @@
 package org.ocpsoft.common.util;
 
 /**
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * Utility methods for making precondition/postcondition assertions.
  * 
+ * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public class Assert
+public final class Assert
 {
-   public static void notNull(final Object object, final String message) throws IllegalStateException
+   private Assert()
+   {}
+
+   /**
+    * Throw an exception if the given {@link Object} is not null.
+    */
+   public static void isNull(final Object object, final String message) throws IllegalArgumentException
+   {
+      if (object != null)
+      {
+         throw new IllegalArgumentException(message);
+      }
+   }
+
+   /**
+    * Throw an exception if the given {@link Object} is null.
+    */
+   public static void notNull(final Object object, final String message) throws IllegalArgumentException
    {
       if (object == null)
       {
@@ -29,9 +47,23 @@ public class Assert
       }
    }
 
-   public static void assertTrue(final boolean value, final String message)
+   /**
+    * Throw an exception if the given value is not true.
+    */
+   public static void assertTrue(final boolean value, final String message) throws IllegalArgumentException
    {
       if (value != true)
+      {
+         throw new IllegalArgumentException(message);
+      }
+   }
+
+   /**
+    * Throw an exception if the given value is not false.
+    */
+   public static void assertFalse(final boolean value, final String message) throws IllegalArgumentException
+   {
+      if (value != false)
       {
          throw new IllegalArgumentException(message);
       }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
+ * Copyright 2012 <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,74 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
+ * Utility methods for manipulating {@link String} instances
+ * 
  * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
  */
-public abstract class Strings
+public final class Strings
 {
+   public Strings()
+   {}
+
    /**
-    * Join a collection of strings using the given delimeter.
+    * Return true if the given {@link String} instances are equal, or if both {@link String} instances are null.
+    */
+   public static boolean areEqual(final String left, final String right)
+   {
+      if ((left == null) && (right == null))
+      {
+         return true;
+      }
+      else if ((left == null) || (right == null))
+      {
+         return false;
+      }
+      return left.equals(right);
+   }
+
+   /**
+    * Return true if the given {@link String} instances are equal when outer whitespace is removed, or if both
+    * {@link String} instances are null. (E.g.: "  hello world  " is equal to "hello world  ")
+    */
+   public static boolean areEqualTrimmed(final String left, final String right)
+   {
+      if ((left != null) && (right != null))
+      {
+         return left.trim().equals(right.trim());
+      }
+      return areEqual(left, right);
+   }
+
+   /**
+    * Capitalize the given {@link String}: "input" -> "Input"
+    */
+   public static String capitalize(final String input)
+   {
+      if ((input == null) || (input.length() == 0))
+      {
+         return input;
+      }
+      return input.substring(0, 1).toUpperCase() + input.substring(1);
+   }
+
+   /**
+    * Return true if the given {@link String} is null or is empty.
+    */
+   public static boolean isNullOrEmpty(final String string)
+   {
+      return (string == null) || string.isEmpty();
+   }
+
+   /**
+    * Return true if the given {@link String} equals "true", case insensitive; otherwise return false.
+    */
+   public static boolean isTrue(final String value)
+   {
+      return value == null ? false : "true".equalsIgnoreCase(value.trim());
+   }
+
+   /**
+    * Join a {@link Collection} of {@link String} instances using the given delimiter.
     */
    public static String join(final Collection<?> collection, final String delimiter)
    {
@@ -39,5 +101,17 @@ public abstract class Strings
          }
       }
       return buffer.toString();
+   }
+
+   /**
+    * Uncapitalize the given {@link String}. (E.g.: "CamelCase" -> "camelCase")
+    */
+   public static String uncapitalize(final String input)
+   {
+      if ((input == null) || (input.length() == 0))
+      {
+         return input;
+      }
+      return input.substring(0, 1).toLowerCase() + input.substring(1);
    }
 }
