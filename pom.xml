@@ -22,7 +22,7 @@
    
    <groupId>org.ocpsoft.common</groupId>
    <artifactId>common-parent</artifactId>
-   <version>1.0.5-SNAPSHOT</version>
+   <version>1.0.5.Final</version>
    <packaging>pom</packaging>
 
    <properties>
