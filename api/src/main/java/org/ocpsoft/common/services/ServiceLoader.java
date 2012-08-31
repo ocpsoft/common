@@ -117,6 +117,7 @@ public class ServiceLoader<S> implements Iterable<S>
    private final ClassLoader loader;
 
    private Set<S> providers;
+   private Set<Class<?>> loadedImplementations;
 
    private java.util.ServiceLoader<ServiceLocator> locatorLoader;
 
@@ -139,6 +140,7 @@ public class ServiceLoader<S> implements Iterable<S>
    public void reload()
    {
       providers = new HashSet<S>();
+      loadedImplementations = new HashSet<Class<?>>();
 
       for (URL serviceFile : loadServiceFiles())
       {
@@ -240,10 +242,18 @@ public class ServiceLoader<S> implements Iterable<S>
       {
          return;
       }
+      if (loadedImplementations.contains(serviceClass))
+      {
+         return;
+      }
       Collection<? extends S> services = loadEnriched(serviceClass);
       if ((services == null) || services.isEmpty())
       {
          return;
+      }
+      for (S service : services)
+      {
+         loadedImplementations.add(service.getClass());
       }
       providers.addAll(services);
    }
