@@ -15,6 +15,8 @@
  */
 package org.ocpsoft.common.services;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import junit.framework.Assert;
@@ -90,5 +92,13 @@ public class ServiceLoaderTest
       Assert.assertFalse(MockServiceEnricher.enriched);
       MockServiceEnricher.produceStandard = false;
       MockServiceLocator.provide = false;
+   }
+   
+   @Test
+   @SuppressWarnings("unchecked")
+   public void testDuplicatedServiceFileEntries()
+   {
+      List<DuplicatedService> list = Iterators.asList(ServiceLoader.load(DuplicatedService.class));
+      assertEquals(1, list.size());
    }
 }
