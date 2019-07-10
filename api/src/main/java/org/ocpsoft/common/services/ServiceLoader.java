@@ -22,13 +22,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.ocpsoft.common.spi.ServiceEnricher;
 import org.ocpsoft.common.spi.ServiceLocator;
@@ -307,7 +301,7 @@ public class ServiceLoader<S> implements Iterable<S>
                services = enricher.produce(serviceClass);
                if (services == null)
                {
-                  services = new ArrayList<T>();
+                  services = Collections.emptyList();
                }
                if (!services.isEmpty())
                {
@@ -321,7 +315,7 @@ public class ServiceLoader<S> implements Iterable<S>
          {
             Constructor<? extends T> constructor = serviceClass.getDeclaredConstructor();
             constructor.setAccessible(true);
-            services.add(constructor.newInstance());
+            services = Collections.singletonList(constructor.newInstance());
          }
 
          if (!NonEnriching.class.isAssignableFrom(serviceClass))
