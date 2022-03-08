@@ -13,5 +13,5 @@ import org.ocpsoft.common.pattern.Weighted;
  */
 public interface ServiceProvider extends Weighted
 {
-   public <T> List<T> getServices(Class<T> type);
+   <T> List<T> getServices(Class<T> type);
 }
