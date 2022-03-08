@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -186,7 +187,7 @@ public class ServiceLoader<S> implements Iterable<S>
    {
       try(InputStream is = serviceFile.openStream())
       {
-         BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+         BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
          String serviceClassName = null;
          while ((serviceClassName = reader.readLine()) != null)
          {

@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Utility methods for working with {@link InputStream} and {@link OutputStream} instances.
@@ -75,7 +76,7 @@ public final class Streams
       try
       {
          final char[] buffer = new char[0x10000];
-         Reader in = new InputStreamReader(stream, "UTF-8");
+         Reader in = new InputStreamReader(stream, StandardCharsets.UTF_8);
          int read;
          do
          {
