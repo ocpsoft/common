@@ -91,4 +91,9 @@
       <system>GitHub</system>
       <url>https://github.com/ocpsoft/common/issues</url>
    </issueManagement>
+
+   <ciManagement>
+      <system>GitHub Actions</system>
+      <url>https://github.com/ocpsoft/common/actions</url>
+   </ciManagement>
 </project>
