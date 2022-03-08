@@ -184,10 +184,8 @@ public class ServiceLoader<S> implements Iterable<S>
 
    private void loadServiceFile(final URL serviceFile)
    {
-      InputStream is = null;
-      try
+      try(InputStream is = serviceFile.openStream())
       {
-         is = serviceFile.openStream();
          BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
          String serviceClassName = null;
          while ((serviceClassName = reader.readLine()) != null)
@@ -202,20 +200,6 @@ public class ServiceLoader<S> implements Iterable<S>
       catch (IOException e)
       {
          throw new RuntimeException("Could not read services file " + serviceFile, e);
-      }
-      finally
-      {
-         if (is != null)
-         {
-            try
-            {
-               is.close();
-            }
-            catch (IOException e)
-            {
-               throw new RuntimeException("Could not close services file " + serviceFile, e);
-            }
-         }
       }
    }
 
@@ -347,23 +331,7 @@ public class ServiceLoader<S> implements Iterable<S>
       {
          throw new RuntimeException("Error instantiating " + serviceClass, e.getCause());
       }
-      catch (IllegalArgumentException e)
-      {
-         throw new RuntimeException("Error instantiating " + serviceClass, e);
-      }
-      catch (InstantiationException e)
-      {
-         throw new RuntimeException("Error instantiating " + serviceClass, e);
-      }
-      catch (IllegalAccessException e)
-      {
-         throw new RuntimeException("Error instantiating " + serviceClass, e);
-      }
-      catch (SecurityException e)
-      {
-         throw new RuntimeException("Error instantiating " + serviceClass, e);
-      }
-      catch (NoSuchMethodException e)
+      catch (IllegalArgumentException | InstantiationException | IllegalAccessException | SecurityException | NoSuchMethodException e)
       {
          throw new RuntimeException("Error instantiating " + serviceClass, e);
       }

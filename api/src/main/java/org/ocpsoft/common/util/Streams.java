@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Utility methods for working with {@link InputStream} and {@link OutputStream} instances.
@@ -87,12 +86,7 @@ public final class Streams
             }
          }
          while (read >= 0);
-      }
-      catch (UnsupportedEncodingException e)
-      {
-         throw new RuntimeException(e);
-      }
-      catch (IOException e)
+      } catch (IOException e)
       {
          throw new RuntimeException(e);
       }
