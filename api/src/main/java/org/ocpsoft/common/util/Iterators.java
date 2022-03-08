@@ -36,7 +36,7 @@ public final class Iterators
     */
    public static <T> List<T> asList(final Iterable<T> iterable)
    {
-      List<T> result = new ArrayList<T>();
+      List<T> result = new ArrayList<>();
       for (T t : iterable)
       {
          result.add(t);
@@ -49,7 +49,7 @@ public final class Iterators
     */
    public static <T> List<T> asList(final Iterator<T> iterator)
    {
-      List<T> result = new ArrayList<T>();
+      List<T> result = new ArrayList<>();
       while (iterator.hasNext())
       {
          T t = iterator.next();
@@ -63,7 +63,7 @@ public final class Iterators
     */
    public static <T> Set<T> asSet(final Iterable<T> iterable)
    {
-      Set<T> result = new HashSet<T>();
+      Set<T> result = new HashSet<>();
       for (T t : iterable)
       {
          result.add(t);
@@ -76,7 +76,7 @@ public final class Iterators
     */
    public static <T> Set<T> asSet(final Iterator<T> iterator)
    {
-      Set<T> result = new HashSet<T>();
+      Set<T> result = new HashSet<>();
       while (iterator.hasNext())
       {
          T t = iterator.next();

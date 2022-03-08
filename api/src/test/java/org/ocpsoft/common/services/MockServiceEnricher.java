@@ -21,7 +21,7 @@ public class MockServiceEnricher implements ServiceEnricher
    @SuppressWarnings("unchecked")
    public <T> Collection<T> produce(final Class<T> type)
    {
-      Collection<T> result = new ArrayList<T>();
+      Collection<T> result = new ArrayList<>();
       /*
        * If we are asked for an instance of #2, provide two instances of #2 with different names.
        */

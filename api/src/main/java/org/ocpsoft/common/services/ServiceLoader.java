@@ -109,7 +109,7 @@ public class ServiceLoader<S> implements Iterable<S>
       {
          loader = service.getClassLoader();
       }
-      return new ServiceLoader<S>(service, loader);
+      return new ServiceLoader<>(service, loader);
    }
 
    private final String serviceFile;
@@ -139,8 +139,8 @@ public class ServiceLoader<S> implements Iterable<S>
     */
    public void reload()
    {
-      providers = new HashSet<S>();
-      loadedImplementations = new HashSet<Class<?>>();
+      providers = new HashSet<>();
+      loadedImplementations = new HashSet<>();
 
       for (URL serviceFile : loadServiceFiles())
       {
@@ -166,7 +166,7 @@ public class ServiceLoader<S> implements Iterable<S>
 
    private List<URL> loadServiceFiles()
    {
-      List<URL> serviceFiles = new ArrayList<URL>();
+      List<URL> serviceFiles = new ArrayList<>();
       try
       {
          Enumeration<URL> serviceFileEnumerator = loader.getResources(serviceFile);
@@ -291,7 +291,7 @@ public class ServiceLoader<S> implements Iterable<S>
    {
       try
       {
-         Collection<T> services = new ArrayList<T>();
+         Collection<T> services = new ArrayList<>();
          ServiceEnricher origin = null;
 
          if (!NonEnriching.class.isAssignableFrom(serviceClass))
@@ -307,7 +307,7 @@ public class ServiceLoader<S> implements Iterable<S>
                services = enricher.produce(serviceClass);
                if (services == null)
                {
-                  services = new ArrayList<T>();
+                  services = new ArrayList<>();
                }
                if (!services.isEmpty())
                {
