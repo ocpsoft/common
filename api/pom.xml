@@ -15,12 +15,18 @@
       <groupId>org.ocpsoft.common</groupId>
       <artifactId>common-parent</artifactId>
       <version>1.0.6-SNAPSHOT</version>
-      <relativePath>../</relativePath>
    </parent>
-   
+
    <artifactId>common-api</artifactId>
    
    <name>OCPsoft Common API</name>
    <description>Common API and Utilities</description>
+
+   <dependencies>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+      </dependency>
+   </dependencies>
 
 </project>
