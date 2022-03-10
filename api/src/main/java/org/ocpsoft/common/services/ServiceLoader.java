@@ -25,6 +25,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,17 +35,16 @@ import java.util.Set;
 import org.ocpsoft.common.spi.ServiceEnricher;
 import org.ocpsoft.common.spi.ServiceLocator;
 
-
 /**
- * This class handles looking up service providers on the class path. It implements the <a
- * href="http://java.sun.com/javase/6/docs/technotes/guides/jar/jar.html#Service%20Provider" >Service Provider section
- * of the JAR File Specification</a>.
+ * This class handles looking up service providers on the class path. It implements the
+ * <a href="http://java.sun.com/javase/6/docs/technotes/guides/jar/jar.html#Service%20Provider" >Service Provider
+ * section of the JAR File Specification</a>.
  * 
  * The Service Provider programmatic lookup was not specified prior to Java 6 so this interface allows use of the
  * specification prior to Java 6.
  * 
- * The API is copied from <a href="http://java.sun.com/javase/6/docs/api/java/util/ServiceLoader.html"
- * >java.util.ServiceLoader</a>
+ * The API is copied from
+ * <a href="http://java.sun.com/javase/6/docs/api/java/util/ServiceLoader.html" >java.util.ServiceLoader</a>
  * 
  * @author Pete Muir
  * @author <a href="mailto:dev@avalon.apache.org">Avalon Development Team</a>
@@ -106,8 +106,7 @@ public class ServiceLoader<S> implements Iterable<S>
     */
    public static <S> ServiceLoader<S> load(final Class<S> service, ClassLoader loader)
    {
-      if (loader == null)
-      {
+      if (loader == null) {
          loader = service.getClassLoader();
       }
       return new ServiceLoader<>(service, loader);
@@ -143,8 +142,7 @@ public class ServiceLoader<S> implements Iterable<S>
       providers = new HashSet<>();
       loadedImplementations = new HashSet<>();
 
-      for (URL serviceFile : loadServiceFiles())
-      {
+      for (URL serviceFile : loadServiceFiles()) {
          loadServiceFile(serviceFile);
       }
 
@@ -152,13 +150,11 @@ public class ServiceLoader<S> implements Iterable<S>
          locatorLoader = java.util.ServiceLoader
                   .load(ServiceLocator.class);
 
-      for (ServiceLocator locator : locatorLoader)
-      {
+      for (ServiceLocator locator : locatorLoader) {
          Collection<Class<S>> serviceTypes = locator.locate(expectedType);
-         if ((serviceTypes != null) && !serviceTypes.isEmpty())
-         {
+         if ((serviceTypes != null) && !serviceTypes.isEmpty()) {
             for (Class<S> type : serviceTypes) {
-               loadClass(type); // TODO lb3 test this now
+               loadClass(type);
             }
          }
       }
@@ -168,16 +164,13 @@ public class ServiceLoader<S> implements Iterable<S>
    private List<URL> loadServiceFiles()
    {
       List<URL> serviceFiles = new ArrayList<>();
-      try
-      {
+      try {
          Enumeration<URL> serviceFileEnumerator = loader.getResources(serviceFile);
-         while (serviceFileEnumerator.hasMoreElements())
-         {
+         while (serviceFileEnumerator.hasMoreElements()) {
             serviceFiles.add(serviceFileEnumerator.nextElement());
          }
       }
-      catch (IOException e)
-      {
+      catch (IOException e) {
          throw new RuntimeException("Could not load resources from " + serviceFile, e);
       }
       return serviceFiles;
@@ -185,21 +178,17 @@ public class ServiceLoader<S> implements Iterable<S>
 
    private void loadServiceFile(final URL serviceFile)
    {
-      try(InputStream is = serviceFile.openStream())
-      {
+      try (InputStream is = serviceFile.openStream()) {
          BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
          String serviceClassName = null;
-         while ((serviceClassName = reader.readLine()) != null)
-         {
+         while ((serviceClassName = reader.readLine()) != null) {
             serviceClassName = trim(serviceClassName);
-            if (serviceClassName.length() > 0)
-            {
+            if (serviceClassName.length() > 0) {
                loadService(serviceClassName);
             }
          }
       }
-      catch (IOException e)
-      {
+      catch (IOException e) {
          throw new RuntimeException("Could not read services file " + serviceFile, e);
       }
    }
@@ -208,8 +197,7 @@ public class ServiceLoader<S> implements Iterable<S>
    {
       final int comment = line.indexOf('#');
 
-      if (comment > -1)
-      {
+      if (comment > -1) {
          line = line.substring(0, comment);
       }
       return line.trim();
@@ -223,21 +211,17 @@ public class ServiceLoader<S> implements Iterable<S>
 
    private void loadClass(final Class<? extends S> serviceClass)
    {
-      if (serviceClass == null)
-      {
+      if (serviceClass == null) {
          return;
       }
-      if (loadedImplementations.contains(serviceClass))
-      {
+      if (loadedImplementations.contains(serviceClass)) {
          return;
       }
       Collection<? extends S> services = loadEnriched(serviceClass);
-      if ((services == null) || services.isEmpty())
-      {
+      if ((services == null) || services.isEmpty()) {
          return;
       }
-      for (S service : services)
-      {
+      for (S service : services) {
          loadedImplementations.add(service.getClass());
       }
       providers.addAll(services);
@@ -247,18 +231,15 @@ public class ServiceLoader<S> implements Iterable<S>
    {
       Class<?> clazz = null;
       Class<? extends S> serviceClass = null;
-      try
-      {
+      try {
          clazz = loader.loadClass(serviceClassName);
          serviceClass = clazz.asSubclass(expectedType);
       }
-      catch (ClassNotFoundException e)
-      {
+      catch (ClassNotFoundException e) {
          throw new RuntimeException("ClassNotFoundException: Service class [" + serviceClassName
                   + "] could not be loaded.");
       }
-      catch (ClassCastException e)
-      {
+      catch (ClassCastException e) {
          throw new ClassCastException("ClassCastException: Service class [" + serviceClassName
                   + "] did not implement the interface [" + expectedType.getName() + "]");
       }
@@ -274,47 +255,37 @@ public class ServiceLoader<S> implements Iterable<S>
     */
    public static <T> Collection<T> loadEnriched(final Class<T> serviceClass)
    {
-      try
-      {
-         Collection<T> services = new ArrayList<>();
+      try {
+         Collection<T> services = Collections.emptyList();
          ServiceEnricher origin = null;
 
-         if (!NonEnriching.class.isAssignableFrom(serviceClass))
-         {
-            if (enricherLoader == null)
-            {
+         if (!NonEnriching.class.isAssignableFrom(serviceClass)) {
+            if (enricherLoader == null) {
                enricherLoader = java.util.ServiceLoader
                         .load(ServiceEnricher.class);
             }
 
-            for (ServiceEnricher enricher : enricherLoader)
-            {
+            for (ServiceEnricher enricher : enricherLoader) {
                services = enricher.produce(serviceClass);
-               if (services == null)
-               {
-                  services = new ArrayList<>();
+               if (services == null) {
+                  services = Collections.emptyList();
                }
-               if (!services.isEmpty())
-               {
+               if (!services.isEmpty()) {
                   origin = enricher;
                   break;
                }
             }
          }
 
-         if (services.isEmpty())
-         {
+         if (services.isEmpty()) {
             Constructor<? extends T> constructor = serviceClass.getDeclaredConstructor();
             constructor.setAccessible(true);
-            services.add(constructor.newInstance());
+            services = Collections.singletonList(constructor.newInstance());
          }
 
-         if (!NonEnriching.class.isAssignableFrom(serviceClass))
-         {
-            for (ServiceEnricher enricher : enricherLoader)
-            {
-               if (!enricher.equals(origin))
-               {
+         if (!NonEnriching.class.isAssignableFrom(serviceClass)) {
+            for (ServiceEnricher enricher : enricherLoader) {
+               if (!enricher.equals(origin)) {
                   for (T service : services) {
                      enricher.enrich(service);
                   }
@@ -324,16 +295,14 @@ public class ServiceLoader<S> implements Iterable<S>
 
          return services;
       }
-      catch (NoClassDefFoundError e)
-      {
+      catch (NoClassDefFoundError e) {
          throw new RuntimeException("Could not instantiate service class " + serviceClass.getName(), e);
       }
-      catch (InvocationTargetException e)
-      {
+      catch (InvocationTargetException e) {
          throw new RuntimeException("Error instantiating " + serviceClass, e.getCause());
       }
-      catch (IllegalArgumentException | InstantiationException | IllegalAccessException | SecurityException | NoSuchMethodException e)
-      {
+      catch (IllegalArgumentException | InstantiationException | IllegalAccessException | SecurityException
+               | NoSuchMethodException e) {
          throw new RuntimeException("Error instantiating " + serviceClass, e);
       }
    }
@@ -368,8 +337,7 @@ public class ServiceLoader<S> implements Iterable<S>
    @Override
    public Iterator<S> iterator()
    {
-      if (providers == null)
-      {
+      if (providers == null) {
          reload();
       }
       return providers.iterator();
