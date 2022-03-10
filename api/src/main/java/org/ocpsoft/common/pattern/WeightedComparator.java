@@ -33,7 +33,7 @@ public class WeightedComparator implements Comparator<Weighted>
       {
          return 0;
       }
-      return ((Integer) left.priority()).compareTo(right.priority());
+      return Integer.compare(left.priority(), right.priority());
    }
 
 }

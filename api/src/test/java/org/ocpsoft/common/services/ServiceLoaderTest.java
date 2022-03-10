@@ -54,8 +54,7 @@ public class ServiceLoaderTest
 
    @Test
    @SuppressWarnings("unchecked")
-   public void testWithEnricherProviderDoesNotProduceUnlessTypeMatches() throws Exception
-   {
+   public void testWithEnricherProviderDoesNotProduceUnlessTypeMatches() {
       MockServiceEnricher.produceLocated = true;
       ServiceLoader<DummyService> services = ServiceLoader.load(DummyService.class);
       List<DummyService> list = Iterators.asList(services);
@@ -65,8 +64,7 @@ public class ServiceLoaderTest
 
    @Test
    @SuppressWarnings("unchecked")
-   public void testWithEnricherAndLocatorProducesTwoSeparateNamedServiceInstances() throws Exception
-   {
+   public void testWithEnricherAndLocatorProducesTwoSeparateNamedServiceInstances() {
       MockServiceEnricher.produceLocated = true;
       MockServiceLocator.provide = true;
       ServiceLoader<DummyService> services = ServiceLoader.load(DummyService.class);
@@ -78,8 +76,7 @@ public class ServiceLoaderTest
 
    @Test
    @SuppressWarnings("unchecked")
-   public void testEnricherThatProvidesClassDoesNotEnrich() throws Exception
-   {
+   public void testEnricherThatProvidesClassDoesNotEnrich() {
       MockServiceEnricher.produceStandard = true;
       MockServiceEnricher.produced = false;
       MockServiceEnricher.enriched = false;

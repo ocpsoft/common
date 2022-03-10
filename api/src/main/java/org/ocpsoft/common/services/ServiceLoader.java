@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -109,7 +110,7 @@ public class ServiceLoader<S> implements Iterable<S>
       {
          loader = service.getClassLoader();
       }
-      return new ServiceLoader<S>(service, loader);
+      return new ServiceLoader<>(service, loader);
    }
 
    private final String serviceFile;
@@ -139,8 +140,8 @@ public class ServiceLoader<S> implements Iterable<S>
     */
    public void reload()
    {
-      providers = new HashSet<S>();
-      loadedImplementations = new HashSet<Class<?>>();
+      providers = new HashSet<>();
+      loadedImplementations = new HashSet<>();
 
       for (URL serviceFile : loadServiceFiles())
       {
@@ -166,7 +167,7 @@ public class ServiceLoader<S> implements Iterable<S>
 
    private List<URL> loadServiceFiles()
    {
-      List<URL> serviceFiles = new ArrayList<URL>();
+      List<URL> serviceFiles = new ArrayList<>();
       try
       {
          Enumeration<URL> serviceFileEnumerator = loader.getResources(serviceFile);
@@ -184,11 +185,9 @@ public class ServiceLoader<S> implements Iterable<S>
 
    private void loadServiceFile(final URL serviceFile)
    {
-      InputStream is = null;
-      try
+      try(InputStream is = serviceFile.openStream())
       {
-         is = serviceFile.openStream();
-         BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+         BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
          String serviceClassName = null;
          while ((serviceClassName = reader.readLine()) != null)
          {
@@ -202,20 +201,6 @@ public class ServiceLoader<S> implements Iterable<S>
       catch (IOException e)
       {
          throw new RuntimeException("Could not read services file " + serviceFile, e);
-      }
-      finally
-      {
-         if (is != null)
-         {
-            try
-            {
-               is.close();
-            }
-            catch (IOException e)
-            {
-               throw new RuntimeException("Could not close services file " + serviceFile, e);
-            }
-         }
       }
    }
 
@@ -291,7 +276,7 @@ public class ServiceLoader<S> implements Iterable<S>
    {
       try
       {
-         Collection<T> services = new ArrayList<T>();
+         Collection<T> services = new ArrayList<>();
          ServiceEnricher origin = null;
 
          if (!NonEnriching.class.isAssignableFrom(serviceClass))
@@ -307,7 +292,7 @@ public class ServiceLoader<S> implements Iterable<S>
                services = enricher.produce(serviceClass);
                if (services == null)
                {
-                  services = new ArrayList<T>();
+                  services = new ArrayList<>();
                }
                if (!services.isEmpty())
                {
@@ -347,23 +332,7 @@ public class ServiceLoader<S> implements Iterable<S>
       {
          throw new RuntimeException("Error instantiating " + serviceClass, e.getCause());
       }
-      catch (IllegalArgumentException e)
-      {
-         throw new RuntimeException("Error instantiating " + serviceClass, e);
-      }
-      catch (InstantiationException e)
-      {
-         throw new RuntimeException("Error instantiating " + serviceClass, e);
-      }
-      catch (IllegalAccessException e)
-      {
-         throw new RuntimeException("Error instantiating " + serviceClass, e);
-      }
-      catch (SecurityException e)
-      {
-         throw new RuntimeException("Error instantiating " + serviceClass, e);
-      }
-      catch (NoSuchMethodException e)
+      catch (IllegalArgumentException | InstantiationException | IllegalAccessException | SecurityException | NoSuchMethodException e)
       {
          throw new RuntimeException("Error instantiating " + serviceClass, e);
       }

@@ -17,6 +17,7 @@ package org.ocpsoft.common.util;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * Utility methods for manipulating {@link String} instances
@@ -33,15 +34,7 @@ public final class Strings
     */
    public static boolean areEqual(final String left, final String right)
    {
-      if ((left == null) && (right == null))
-      {
-         return true;
-      }
-      else if ((left == null) || (right == null))
-      {
-         return false;
-      }
-      return left.equals(right);
+      return Objects.equals(left, right);
    }
 
    /**
@@ -90,7 +83,7 @@ public final class Strings
     */
    public static String join(final Collection<?> collection, final String delimiter)
    {
-      StringBuffer buffer = new StringBuffer();
+      StringBuilder buffer = new StringBuilder();
       Iterator<?> iter = collection.iterator();
       while (iter.hasNext())
       {
